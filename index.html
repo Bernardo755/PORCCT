@@ -279,23 +279,19 @@ button:hover{
    ========================================================== */
 
 const URL_APPS_SCRIPT =
-  "https://script.google.com/macros/s/AKfycbzsouJVljAgaF9QbhV4vrQYAnLonNT2pjqZrWZ66lkDyD1sf5uZsjBrZPgK9a2gv0N4bw/exec";
+  "https://script.google.com/macros/s/AKfycby3AxDA1ep7g6BDhHDoAGn0gU_s5c3wx35RI4gZ2qfLF6UACnsDulPwTY5zoDl6sJ35RA/exec";
 
 
 /* ==========================================================
-   ESTADÍSTICAS PROPIAS
+   ID ANÓNIMO DEL NAVEGADOR / DISPOSITIVO
    ----------------------------------------------------------
-   - No muestra nada al usuario.
-   - No usa Google Analytics.
-   - Genera un identificador anónimo del navegador.
-   - Cuenta una visita por navegador y por día.
+   Este ID NO identifica físicamente a una persona.
+   Identifica el navegador/dispositivo mientras conserve
+   su almacenamiento local.
    ========================================================== */
 
 const VISITOR_ID_KEY =
-  "asambleas_cct_visitor_id_v1";
-
-const VISIT_DATE_KEY =
-  "asambleas_cct_visit_date_v1";
+  "asambleas_cct_visitor_id_v2";
 
 
 function generarVisitorId(){
@@ -304,11 +300,11 @@ function generarVisitorId(){
     window.crypto &&
     typeof window.crypto.randomUUID === "function"
   ){
-    return window.crypto.randomUUID();
+    return "U-" + window.crypto.randomUUID();
   }
 
   return (
-    "v-" +
+    "U-" +
     Date.now().toString(36) +
     "-" +
     Math.random().toString(36).slice(2) +
@@ -342,83 +338,6 @@ function obtenerVisitorId(){
     return generarVisitorId();
   }
 }
-
-
-function obtenerFechaLocal(){
-
-  const ahora = new Date();
-
-  const year = ahora.getFullYear();
-  const month = String(
-    ahora.getMonth() + 1
-  ).padStart(2,"0");
-  const day = String(
-    ahora.getDate()
-  ).padStart(2,"0");
-
-  return year + "-" + month + "-" + day;
-}
-
-
-function registrarVisita(){
-
-  try{
-
-    const hoy = obtenerFechaLocal();
-
-    const ultimaFecha =
-      localStorage.getItem(VISIT_DATE_KEY);
-
-    // Ya contamos este navegador hoy.
-    if(ultimaFecha === hoy){
-      return;
-    }
-
-    const visitorId =
-      obtenerVisitorId();
-
-    // Marcamos antes de enviar para evitar dobles solicitudes
-    // por aperturas simultáneas de la aplicación.
-    localStorage.setItem(
-      VISIT_DATE_KEY,
-      hoy
-    );
-
-    const url =
-      URL_APPS_SCRIPT +
-      "?action=visita" +
-      "&visitorId=" +
-      encodeURIComponent(visitorId);
-
-    fetch(url,{
-      method:"GET",
-      cache:"no-store",
-      keepalive:true
-    }).catch(function(){
-
-      // Si no hubo conexión, permitimos que se intente nuevamente
-      // la próxima vez que se abra la aplicación.
-      try{
-        localStorage.removeItem(
-          VISIT_DATE_KEY
-        );
-      }catch(error){
-        // No hacemos nada.
-      }
-    });
-
-  }catch(error){
-    // Las estadísticas nunca deben impedir el uso de la aplicación.
-    console.error(
-      "No se pudo registrar la visita:",
-      error
-    );
-  }
-}
-
-
-// Registrar visita sin alterar la interfaz.
-registrarVisita();
 
 
 /* ==========================================
@@ -566,7 +485,6 @@ async function buscar(){
   const tituloPrincipal =
     document.getElementById("tituloPrincipal");
 
-
   const tituloOriginal = `
     Asambleas Informativas
     <br>
@@ -574,7 +492,6 @@ async function buscar(){
     <br>
     Hidalgo
   `;
-
 
   const logoOriginal =
     "CNBBBJ.png";
@@ -587,7 +504,6 @@ async function buscar(){
 
     tituloPrincipal.innerHTML =
       tituloOriginal;
-
   }
 
 
@@ -613,20 +529,29 @@ async function buscar(){
 
 
   /*
-   * URL ACTUAL DEL APPS SCRIPT
-   * Se mantiene sin cambios respecto de la aplicación original.
+   * El ID anónimo se manda junto con cada consulta.
+   * No se envía nombre, correo ni IP.
    */
+
+  const visitorId =
+    obtenerVisitorId();
+
 
   try{
 
+    const url =
+      URL_APPS_SCRIPT +
+      "?action=consulta" +
+      "&cct=" +
+      encodeURIComponent(cct) +
+      "&visitorId=" +
+      encodeURIComponent(visitorId) +
+      "&t=" +
+      new Date().getTime();
+
     const respuesta =
       await fetch(
-        URL_APPS_SCRIPT +
-        "?action=consulta" +
-        "&cct=" +
-        encodeURIComponent(cct) +
-        "&t=" +
-        new Date().getTime(),
+        url,
         {
           cache:"no-store"
         }
@@ -671,7 +596,6 @@ async function buscar(){
         logoPrincipal.src =
           "LOGO EMS.png";
 
-
         imagenInferiorHTML = `
           <img
             src="EMS.jpeg"
@@ -701,7 +625,6 @@ async function buscar(){
 
         logoPrincipal.src =
           "LOGO JEF.png";
-
 
         imagenInferiorHTML = `
           <img
@@ -735,7 +658,6 @@ async function buscar(){
         logoPrincipal.src =
           "LOGO BASICA.png";
 
-
         imagenInferiorHTML = `
           <img
             src="BASICA.jpeg"
@@ -752,9 +674,7 @@ async function buscar(){
        */
 
       else{
-
         resetDefault();
-
       }
 
 
@@ -764,7 +684,6 @@ async function buscar(){
 
       let horarioFormateado =
         datos.horario || "Pendiente";
-
 
       if(
         horarioFormateado !==
@@ -777,7 +696,6 @@ async function buscar(){
             .replace(":00 p. m."," p.m.")
             .replace(" a. m."," a.m.")
             .replace(" p. m."," p.m.");
-
       }
 
 
@@ -792,7 +710,6 @@ async function buscar(){
           <h2>
             🏫 ${datos.escuela}
           </h2>
-
 
           <div class="item">
 
@@ -846,7 +763,6 @@ async function buscar(){
 
         </div>
 
-
         ${imagenInferiorHTML}
 
       `;
@@ -867,7 +783,6 @@ async function buscar(){
     `;
 
     resetDefault();
-
   }
 
 }
