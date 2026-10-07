@@ -1,0 +1,52 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="referrer" content="no-referrer">
+  <title>SISTEMA DE BUSQUEDA</title>
+
+  <link rel="stylesheet" href="css/styles.css">
+
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/xlsx/0.18.5/xlsx.full.min.js"></script>
+  <!-- Versión fija. Recomendado: agregar integrity="sha384-..." (ver README, sección "Librerías externas"). -->
+  <script src="https://unpkg.com/html5-qrcode@2.3.8/html5-qrcode.min.js"></script>
+</head>
+
+<body>
+
+  <div id="login-section" class="tarjeta"></div>
+
+  <div id="app-section"
+       class="tarjeta"
+       style="display:none"></div>
+
+  <!-- 1. Configuración pública -->
+  <script src="config.js"></script>
+
+  <!-- 2. Capas base: utilidades, sesión, API y registro de módulos -->
+  <script src="modules/utils.js"></script>
+  <script src="modules/session.js"></script>
+  <script src="modules/api.js"></script>
+  <script src="modules/registry.js"></script>
+
+  <!-- 3. Pantallas y módulos (el orden define el orden en pantalla) -->
+  <script src="modules/login.js"></script>
+  <script src="modules/app-shell.js"></script>
+
+  <script src="modules/mod-tramites.js"></script>
+  <script src="modules/mod-tarjetas.js"></script>
+  <script src="modules/mod-consulta.js"></script>
+  <script src="modules/mod-edicion.js"></script>
+  <script src="modules/mod-excel.js"></script>
+  <script src="modules/mod-documental.js"></script>
+  <script src="modules/mod-admin.js"></script>
+
+  <script src="modules/mod-qr.js"></script>
+  <script src="modules/mod-modales.js"></script>
+
+  <!-- 4. Núcleo (al final: usa todo lo anterior) -->
+  <script src="modules/core.js"></script>
+
+</body>
+</html>
