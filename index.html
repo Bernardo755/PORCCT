@@ -1,0 +1,878 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Asambleas Informativas Beca Universal de Educación Básica “Rita Cetina” Hidalgo</title>
+
+<style>
+
+body{
+  margin:0;
+  padding:0;
+  font-family:Arial,sans-serif;
+  background:#f7f2f4;
+  display:flex;
+  justify-content:center;
+  align-items:center;
+  min-height:100vh;
+}
+
+.container{
+  width:90%;
+  max-width:550px;
+  background:white;
+  border-radius:25px;
+  padding:35px;
+  box-shadow:0 5px 20px rgba(0,0,0,0.12);
+  text-align:center;
+}
+
+h1{
+  color:#7a1f3d;
+  font-size:34px;
+  margin-bottom:10px;
+  line-height:1.4;
+}
+
+.subtitulo{
+  font-size:20px;
+  color:#444;
+  margin-bottom:30px;
+  line-height:1.5;
+}
+
+input{
+  width:100%;
+  padding:18px;
+  font-size:24px;
+  border-radius:15px;
+  border:2px solid #d6c5cb;
+  box-sizing:border-box;
+  text-align:center;
+}
+
+input:focus{
+  outline:none;
+  border-color:#7a1f3d;
+  box-shadow:0 0 8px rgba(122,31,61,0.25);
+}
+
+button{
+  width:100%;
+  margin-top:20px;
+  padding:18px;
+  background:#7a1f3d;
+  color:white;
+  border:none;
+  border-radius:15px;
+  font-size:26px;
+  cursor:pointer;
+  transition:0.3s;
+}
+
+button:hover{
+  background:#5e1730;
+}
+
+.card{
+  margin-top:30px;
+  background:#faf5f7;
+  border-radius:20px;
+  padding:25px;
+  text-align:left;
+  border:1px solid #eadde2;
+}
+
+.card h2{
+  color:#7a1f3d;
+  margin-top:0;
+  margin-bottom:20px;
+}
+
+.item{
+  margin-bottom:18px;
+  font-size:20px;
+  color:#333;
+  line-height:1.5;
+}
+
+.icon{
+  font-size:24px;
+  margin-right:10px;
+}
+
+.error{
+  margin-top:20px;
+  color:#c62828;
+  font-size:22px;
+  font-weight:bold;
+}
+
+.loader{
+  margin-top:20px;
+  font-size:22px;
+  color:#7a1f3d;
+}
+
+.footer{
+  margin-top:25px;
+  font-size:16px;
+  color:#777;
+}
+
+.imagen-inferior{
+  width:100%;
+  max-width:280px;
+  height:auto;
+  margin:25px auto 0 auto;
+  display:block;
+  border-radius:12px;
+}
+
+
+/* ==========================================
+   TARJETA FACEBOOK
+   ========================================== */
+
+.facebook-container{
+  margin-top:10px;
+}
+
+.facebook-message{
+  font-size:19px;
+  color:#333;
+  line-height:1.4;
+  margin-bottom:12px;
+}
+
+.facebook-card{
+  border:1px solid #ddd;
+  border-radius:14px;
+  background:white;
+  overflow:hidden;
+  box-shadow:0 2px 8px rgba(0,0,0,0.08);
+  cursor:pointer;
+  transition:0.2s;
+}
+
+.facebook-card:hover{
+  box-shadow:0 4px 14px rgba(0,0,0,0.15);
+  transform:translateY(-1px);
+}
+
+.facebook-card-top{
+  padding:18px;
+  display:flex;
+  align-items:center;
+  gap:14px;
+}
+
+.facebook-icon{
+  width:48px;
+  height:48px;
+  border-radius:50%;
+  background:#1877F2;
+  color:white;
+  display:flex;
+  align-items:center;
+  justify-content:center;
+  font-size:28px;
+  font-weight:bold;
+  flex-shrink:0;
+}
+
+.facebook-info{
+  min-width:0;
+}
+
+.facebook-title{
+  font-size:18px;
+  font-weight:bold;
+  color:#333;
+  margin-bottom:5px;
+}
+
+.facebook-url{
+  font-size:15px;
+  color:#777;
+  word-break:break-all;
+}
+
+.facebook-button{
+  display:block;
+  margin:0 18px 18px 18px;
+  padding:12px;
+  background:#1877F2;
+  color:white;
+  text-align:center;
+  border-radius:8px;
+  font-size:16px;
+  font-weight:bold;
+  text-decoration:none;
+}
+
+.facebook-button:hover{
+  background:#166fe5;
+}
+
+.link-facebook{
+  color:#7a1f3d;
+  font-weight:bold;
+  text-decoration:underline;
+}
+
+</style>
+</head>
+
+
+<body>
+
+<div class="container">
+
+  <!-- Imagen principal -->
+  <img
+    id="logoPrincipal"
+    src="CNBBBJ.png"
+    alt="Logo Principal"
+    style="max-width:100%;height:auto;margin-bottom:15px;"
+  >
+
+  <h1 id="tituloPrincipal">
+    Asambleas Informativas
+    <br>
+    Beca Universal de Educación Básica “Rita Cetina”
+    <br>
+    Hidalgo
+  </h1>
+
+  <div class="subtitulo">
+    Coloca la clave de la escuela para conocer la programación.
+  </div>
+
+  <input
+    type="text"
+    id="cct"
+    placeholder="Ingresa tu CCT"
+  >
+
+  <button onclick="buscar()">
+    🔎 CONSULTAR
+  </button>
+
+  <div id="resultado"></div>
+
+  <div class="footer">
+    Becas Bienestar<br>
+    Coordinación Nacional<br>
+    Hidalgo
+  </div>
+
+</div>
+
+
+<script>
+
+/* ==========================================================
+   CONFIGURACIÓN
+   ========================================================== */
+
+const URL_APPS_SCRIPT =
+  "https://script.google.com/macros/s/AKfycbx6OXnkzQBJ5L3V7HZ3rLcKnSSMlCondkpDCPwPVR8x40YR9BXtkffu1_1mavb04ky4rA/exec";
+
+
+/* ==========================================================
+   ESTADÍSTICAS PROPIAS
+   ----------------------------------------------------------
+   - No muestra nada al usuario.
+   - No usa Google Analytics.
+   - Genera un identificador anónimo del navegador.
+   - Cuenta una visita por navegador y por día.
+   ========================================================== */
+
+const VISITOR_ID_KEY =
+  "asambleas_cct_visitor_id_v1";
+
+const VISIT_DATE_KEY =
+  "asambleas_cct_visit_date_v1";
+
+
+function generarVisitorId(){
+
+  if(
+    window.crypto &&
+    typeof window.crypto.randomUUID === "function"
+  ){
+    return window.crypto.randomUUID();
+  }
+
+  return (
+    "v-" +
+    Date.now().toString(36) +
+    "-" +
+    Math.random().toString(36).slice(2) +
+    Math.random().toString(36).slice(2)
+  );
+}
+
+
+function obtenerVisitorId(){
+
+  try{
+
+    let visitorId =
+      localStorage.getItem(VISITOR_ID_KEY);
+
+    if(!visitorId){
+
+      visitorId = generarVisitorId();
+
+      localStorage.setItem(
+        VISITOR_ID_KEY,
+        visitorId
+      );
+    }
+
+    return visitorId;
+
+  }catch(error){
+
+    // Si el navegador bloquea localStorage, usamos un ID temporal.
+    return generarVisitorId();
+  }
+}
+
+
+function obtenerFechaLocal(){
+
+  const ahora = new Date();
+
+  const year = ahora.getFullYear();
+  const month = String(
+    ahora.getMonth() + 1
+  ).padStart(2,"0");
+  const day = String(
+    ahora.getDate()
+  ).padStart(2,"0");
+
+  return year + "-" + month + "-" + day;
+}
+
+
+function registrarVisita(){
+
+  try{
+
+    const hoy = obtenerFechaLocal();
+
+    const ultimaFecha =
+      localStorage.getItem(VISIT_DATE_KEY);
+
+    // Ya contamos este navegador hoy.
+    if(ultimaFecha === hoy){
+      return;
+    }
+
+    const visitorId =
+      obtenerVisitorId();
+
+    // Marcamos antes de enviar para evitar dobles solicitudes
+    // por aperturas simultáneas de la aplicación.
+    localStorage.setItem(
+      VISIT_DATE_KEY,
+      hoy
+    );
+
+    const url =
+      URL_APPS_SCRIPT +
+      "?action=visita" +
+      "&visitorId=" +
+      encodeURIComponent(visitorId);
+
+    fetch(url,{
+      method:"GET",
+      cache:"no-store",
+      keepalive:true
+    }).catch(function(){
+
+      // Si no hubo conexión, permitimos que se intente nuevamente
+      // la próxima vez que se abra la aplicación.
+      try{
+        localStorage.removeItem(
+          VISIT_DATE_KEY
+        );
+      }catch(error){
+        // No hacemos nada.
+      }
+    });
+
+  }catch(error){
+    // Las estadísticas nunca deben impedir el uso de la aplicación.
+    console.error(
+      "No se pudo registrar la visita:",
+      error
+    );
+  }
+}
+
+
+// Registrar visita sin alterar la interfaz.
+registrarVisita();
+
+
+/* ==========================================
+   DETECTAR LINK DE FACEBOOK
+   ========================================== */
+
+function convertirLinks(texto){
+
+  if(!texto){
+    return "";
+  }
+
+  const urlRegex = /(https?:\/\/[^\s]+)/g;
+
+  const coincidencia = texto.match(urlRegex);
+
+
+  /* Si no existe ningún enlace */
+
+  if(!coincidencia){
+
+    return texto;
+
+  }
+
+
+  const url = coincidencia[0];
+
+
+  /* Texto antes del enlace */
+
+  const mensaje =
+    texto.substring(
+      0,
+      texto.indexOf(url)
+    ).trim();
+
+
+  /* Detectar Facebook */
+
+  if(
+    url.includes("facebook.com") ||
+    url.includes("fb.com")
+  ){
+
+    return `
+
+      <div class="facebook-container">
+
+        ${
+          mensaje
+          ? `
+            <div class="facebook-message">
+              ${mensaje}
+            </div>
+          `
+          : ""
+        }
+
+
+        <div
+          class="facebook-card"
+          onclick="window.open('${url}','_blank')"
+        >
+
+          <div class="facebook-card-top">
+
+            <div class="facebook-icon">
+              f
+            </div>
+
+            <div class="facebook-info">
+
+              <div class="facebook-title">
+                Perfil de Facebook
+              </div>
+
+              <div class="facebook-url">
+                ${url}
+              </div>
+
+            </div>
+
+          </div>
+
+
+          <a
+            href="${url}"
+            target="_blank"
+            rel="noopener noreferrer"
+            class="facebook-button"
+            onclick="event.stopPropagation();"
+          >
+            Ver perfil de Facebook
+          </a>
+
+        </div>
+
+      </div>
+
+    `;
+
+  }
+
+
+  /* Si es otro tipo de enlace */
+
+  return `
+
+    ${mensaje}
+
+    <a
+      href="${url}"
+      target="_blank"
+      rel="noopener noreferrer"
+      class="link-facebook"
+    >
+      ${url}
+    </a>
+
+  `;
+
+}
+
+
+/* ==========================================
+   BUSCAR
+   ========================================== */
+
+async function buscar(){
+
+  const cct =
+    document
+      .getElementById("cct")
+      .value
+      .trim()
+      .toUpperCase();
+
+  const div =
+    document.getElementById("resultado");
+
+  const logoPrincipal =
+    document.getElementById("logoPrincipal");
+
+  const tituloPrincipal =
+    document.getElementById("tituloPrincipal");
+
+
+  const tituloOriginal = `
+    Asambleas Informativas
+    <br>
+    Beca Universal de Educación Básica “Rita Cetina”
+    <br>
+    Hidalgo
+  `;
+
+
+  const logoOriginal =
+    "CNBBBJ.png";
+
+
+  function resetDefault(){
+
+    logoPrincipal.src =
+      logoOriginal;
+
+    tituloPrincipal.innerHTML =
+      tituloOriginal;
+
+  }
+
+
+  if(!cct){
+
+    div.innerHTML = `
+      <p class="error">
+        ⚠️ Ingresa tu CCT
+      </p>
+    `;
+
+    resetDefault();
+
+    return;
+  }
+
+
+  div.innerHTML = `
+    <p class="loader">
+      ⏳ Consultando información...
+    </p>
+  `;
+
+
+  /*
+   * URL ACTUAL DEL APPS SCRIPT
+   * Se mantiene sin cambios respecto de la aplicación original.
+   */
+
+  try{
+
+    const respuesta =
+      await fetch(
+        URL_APPS_SCRIPT +
+        "?action=consulta" +
+        "&cct=" +
+        encodeURIComponent(cct) +
+        "&t=" +
+        new Date().getTime(),
+        {
+          cache:"no-store"
+        }
+      );
+
+
+    const datos =
+      await respuesta.json();
+
+
+    if(datos.error){
+
+      div.innerHTML = `
+        <p class="error">
+          ❌ ${datos.error}
+        </p>
+      `;
+
+      resetDefault();
+
+    }else{
+
+      let imagenInferiorHTML = "";
+
+
+      /*
+       * PROGRAMA S311
+       */
+
+      if(
+        String(datos.columnaC || "")
+          .trim()
+          .toUpperCase() === "S311"
+      ){
+
+        tituloPrincipal.innerHTML = `
+          Asambleas Informativas
+          <br>
+          Beca Universal de Educación Media Superior "Benito Juárez"
+        `;
+
+        logoPrincipal.src =
+          "LOGO EMS.png";
+
+
+        imagenInferiorHTML = `
+          <img
+            src="EMS.jpeg"
+            alt="Logo EMS"
+            class="imagen-inferior"
+          >
+        `;
+
+      }
+
+
+      /*
+       * PROGRAMA S283
+       */
+
+      else if(
+        String(datos.columnaC || "")
+          .trim()
+          .toUpperCase() === "S283"
+      ){
+
+        tituloPrincipal.innerHTML = `
+          Asambleas Informativas
+          <br>
+          Beca Jóvenes Escribiendo el Futuro
+        `;
+
+        logoPrincipal.src =
+          "LOGO JEF.png";
+
+
+        imagenInferiorHTML = `
+          <img
+            src="JEF.jpeg"
+            alt="Logo JEF"
+            class="imagen-inferior"
+          >
+        `;
+
+      }
+
+
+      /*
+       * PROGRAMA S072
+       */
+
+      else if(
+        String(datos.columnaC || "")
+          .trim()
+          .toUpperCase() === "S072"
+      ){
+
+        tituloPrincipal.innerHTML = `
+          Asambleas Informativas
+          <br>
+          Beca Universal de Educación Básica “Rita Cetina”
+          <br>
+          Hidalgo
+        `;
+
+        logoPrincipal.src =
+          "LOGO BASICA.png";
+
+
+        imagenInferiorHTML = `
+          <img
+            src="BASICA.jpeg"
+            alt="Logo Básica"
+            class="imagen-inferior"
+          >
+        `;
+
+      }
+
+
+      /*
+       * SI NO SE RECONOCE EL PROGRAMA
+       */
+
+      else{
+
+        resetDefault();
+
+      }
+
+
+      /*
+       * FORMATEAR HORA
+       */
+
+      let horarioFormateado =
+        datos.horario || "Pendiente";
+
+
+      if(
+        horarioFormateado !==
+        "Pendiente"
+      ){
+
+        horarioFormateado =
+          horarioFormateado
+            .replace(":00 a. m."," a.m.")
+            .replace(":00 p. m."," p.m.")
+            .replace(" a. m."," a.m.")
+            .replace(" p. m."," p.m.");
+
+      }
+
+
+      /*
+       * MOSTRAR RESULTADO
+       */
+
+      div.innerHTML = `
+
+        <div class="card">
+
+          <h2>
+            🏫 ${datos.escuela}
+          </h2>
+
+
+          <div class="item">
+
+            <span class="icon">
+              📅
+            </span>
+
+            <b>Fecha:</b>
+            ${datos.fecha || "Pendiente"}
+
+          </div>
+
+
+          <div class="item">
+
+            <span class="icon">
+              🕒
+            </span>
+
+            <b>Horario:</b>
+            ${horarioFormateado}
+
+          </div>
+
+
+          <div class="item">
+
+            <span class="icon">
+              🏢
+            </span>
+
+            <b>Sede:</b>
+            ${datos.sede || "Pendiente"}
+
+          </div>
+
+
+          <div class="item">
+
+            <span class="icon">
+              📍
+            </span>
+
+            <b>Dirección:</b>
+
+            ${convertirLinks(
+              datos.direccion || "Pendiente"
+            )}
+
+          </div>
+
+        </div>
+
+
+        ${imagenInferiorHTML}
+
+      `;
+
+    }
+
+  }
+
+
+  catch(error){
+
+    console.error(error);
+
+    div.innerHTML = `
+      <p class="error">
+        ⚠️ Error al consultar información
+      </p>
+    `;
+
+    resetDefault();
+
+  }
+
+}
+
+</script>
+
+</body>
+</html>
