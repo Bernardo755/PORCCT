@@ -6,7 +6,7 @@
    NUNCA escribir aquí contraseñas, tokens ni llaves. El límite de sesión (2 h) lo fija el backend.
    ========================================================= */
 window.APP_CONFIG = {
-  API_URL: 'https://script.google.com/macros/s/AKfycbzpMTrvcZKSf0yiCaWaFrdQP8-09svkDnTcm97CXD4C92JQYwinxz_EwdsPJtoWglUvFw/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycbwlSSTPWlNzX7yrbaV0yTfmV-Gs0nFoOUKzKkl55PGgg07C9e4dCmxuBtjYgndHqHcY4w/exec',
   URL_APP_B: 'https://bernardo755.github.io/PRUEBA/',
   URL_CARGA_TARJETAS: 'https://bernardo755.github.io/ACTUALIZADOR/',
   URL_SISTEMA_CONSULTA: 'https://bernardo755.github.io/ESTADOS/',
