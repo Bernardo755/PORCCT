@@ -5,7 +5,7 @@
    (token de sesión + rol validados en cada petición).
    ========================================================= */
 window.APP_CONFIG = Object.freeze({
-  API_URL: 'https://script.google.com/macros/s/AKfycbwiWNdsNQ3XUOM96JO-L2c8RuI1SreWVXHETYnlGffcdjGycJxXLCPf652jIAzDT3Ar5A/exec',
+  API_URL: 'https://script.google.com/macros/s/AKfycby5KAWJkpDE-Kne0XZGJkFWoL1W9p1XXiTgBA0DC7wKREubHcAMPNtJKLxcseKwQe2ZZw/exec',
   URL_APP_B: 'https://bernardo755.github.io/PRUEBA/',
   URL_CARGA_TARJETAS: 'https://bernardo755.github.io/ACTUALIZADOR/',
   URL_SISTEMA_CONSULTA: 'https://bernardo755.github.io/ESTADOS/',
