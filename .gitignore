@@ -1,0 +1,19 @@
+# Secretos y entornos locales
+.env
+.env.*
+!.env.example
+secrets/
+credentials/
+*.key
+*.pem
+service-account*.json
+credentials*.json
+
+# Dependencias / builds
+node_modules/
+dist/
+build/
+
+# Sistema
+.DS_Store
+Thumbs.db
