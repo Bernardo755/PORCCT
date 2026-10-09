@@ -131,8 +131,7 @@
         }
 
         /* --- BLOQUE 1: REGISTRO DE TRÁMITES --- */
-.bloque-lanzador,
-.bloque-lanzador-tarjetas {
+        .bloque-lanzador {
             background-color: var(--surface);
             width: 100%;
             max-width: 550px;
@@ -171,12 +170,9 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(26, 37, 47, 0.4);
         }
-.btn-lanzador:active,
-.btn-lanzador-tarjetas:active,
-.btn-lanzador-consulta:active { transform: translateY(0); }
+        .btn-lanzador:active { transform: translateY(0); }
 
-.modal-overlay,
-.modal-overlay-tarjetas {
+        .modal-overlay {
             display: none;
             position: fixed;
             top: 0; left: 0;
@@ -186,8 +182,7 @@
             justify-content: center;
             align-items: center;
         }
-.modal-container,
-.modal-container-tarjetas {
+        .modal-container {
             background: #fff;
             width: 90%;
             max-width: 1000px;
@@ -207,12 +202,23 @@
             align-items: center;
         }
         .btn-cerrar { background: #e74c3c; color: white; border: none; padding: 6px 12px; border-radius: 4px; cursor: pointer; font-weight: bold; }
-.btn-cerrar:hover,
-.btn-cerrar-tarjetas:hover { background: #c0392b; }
-.modal-iframe,
-.modal-iframe-tarjetas { width: 100%; height: 100%; border: none; }
+        .btn-cerrar:hover { background: #c0392b; }
+        .modal-iframe { width: 100%; height: 100%; border: none; }
 
         /* --- BLOQUE 2: CARGA DE NUEVAS TARJETAS --- */
+        .bloque-lanzador-tarjetas {
+            background-color: var(--surface);
+            width: 100%;
+            max-width: 550px;
+            padding: 40px 30px;
+            border-radius: var(--radius);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.1);
+            border: 1px solid var(--border);
+            text-align: center;
+            margin: 20px auto;
+            font-family: sans-serif;
+            box-sizing: border-box;
+        }
         .titulo-lanzador-tarjetas {
             color: var(--primary);
             font-size: 1.3rem;
@@ -222,8 +228,7 @@
             letter-spacing: -0.5px;
             text-transform: uppercase;
         }
-.contenedor-boton-tarjetas,
-.contenedor-boton-consulta { display: flex; justify-content: center; align-items: center; width: 100%; margin: 20px 0; }
+        .contenedor-boton-tarjetas { display: flex; justify-content: center; align-items: center; width: 100%; margin: 20px 0; }
         .btn-lanzador-tarjetas {
             background-color: var(--primary);
             color: #ffffff;
@@ -244,6 +249,28 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(0, 0, 0, 0.3);
         }
+        .btn-lanzador-tarjetas:active { transform: translateY(0); }
+        .modal-overlay-tarjetas {
+            display: none;
+            position: fixed;
+            top: 0; left: 0;
+            width: 100%; height: 100%;
+            background-color: rgba(0, 0, 0, 0.7);
+            z-index: 1000;
+            justify-content: center;
+            align-items: center;
+        }
+        .modal-container-tarjetas {
+            background: #fff;
+            width: 90%;
+            max-width: 1000px;
+            height: 85vh;
+            border-radius: 8px;
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            box-shadow: 0 4px 15px rgba(0,0,0,0.3);
+        }
         .modal-header-tarjetas {
             padding: 12px 20px;
             background: var(--primary);
@@ -255,6 +282,8 @@
             font-family: sans-serif;
         }
         .btn-cerrar-tarjetas { background: #e74c3c; color: white; border: none; padding: 6px 14px; border-radius: 4px; cursor: pointer; font-weight: bold; transition: background 0.2s; }
+        .btn-cerrar-tarjetas:hover { background: #c0392b; }
+        .modal-iframe-tarjetas { width: 100%; height: 100%; border: none; }
 
         /* --- BLOQUE 3: CONSULTA ESTADOS --- */
         .bloque-lanzador-consulta {
@@ -279,6 +308,7 @@
             letter-spacing: -0.5px;
             text-transform: uppercase;
         }
+        .contenedor-boton-consulta { display: flex; justify-content: center; align-items: center; width: 100%; margin: 20px 0; }
         .btn-lanzador-consulta {
             background-color: #1e5b4f;
             color: #ffffff;
@@ -299,6 +329,7 @@
             transform: translateY(-2px);
             box-shadow: 0 6px 15px rgba(30, 91, 79, 0.4);
         }
+        .btn-lanzador-consulta:active { transform: translateY(0); }
         .modal-overlay-consulta {
             display: none;
             position: fixed;
