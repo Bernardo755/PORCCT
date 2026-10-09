@@ -40,6 +40,15 @@
                                 <button style="background-color: #d32f2f;" onclick="ejecutarBloqueo()">Bloquear Acceso</button>
                             </div>
                         </div>
+
+                        <div class="panel-diagnostico" style="margin-top: 20px;">
+                            <h3 style="text-align: center;">Diagnóstico del servidor</h3>
+                            <p style="text-align: center;">Comprueba hojas, permisos y servicios del backend desplegado. No modifica datos de la base.</p>
+                            <div style="text-align: center;">
+                                <button id="btnDiagnostico" onclick="ejecutarDiagnostico()">Ejecutar diagnóstico</button>
+                            </div>
+                            <pre id="resultado-diagnostico" style="display:none; white-space:pre-wrap; word-break:break-word; background:#263238; color:#eceff1; padding:12px; border-radius:8px; font-size:12px; margin-top:12px;"></pre>
+                        </div>
                     </div>
                 </div>
             </details>`);
@@ -155,6 +164,26 @@
             } catch (e) { select.innerHTML = '<option>Error al cargar usuarios</option>'; }
         }
 
+        async function ejecutarDiagnostico() {
+            const btn = document.getElementById('btnDiagnostico');
+            const salida = document.getElementById('resultado-diagnostico');
+            btn.disabled = true; btn.innerText = "Ejecutando...";
+            salida.style.display = 'block';
+            salida.textContent = 'Ejecutando diagnóstico en el servidor...';
+            try {
+                const res = await enviarPeticion({ action: "diagnostico" });
+                if (res && res.lineas) {
+                    salida.textContent = res.lineas.join('\n');
+                } else {
+                    salida.textContent = (res && res.error) ? 'Error: ' + res.error : 'Respuesta inesperada del servidor.';
+                }
+            } catch (e) {
+                salida.textContent = 'No se pudo comunicar con el servidor (¿la URL de config.js termina en /exec y apunta a la implementación actual?).';
+            } finally {
+                btn.disabled = false; btn.innerText = "Ejecutar diagnóstico";
+            }
+        }
+
         async function ejecutarBloqueo() {
             const userParaBloquear = document.getElementById('listaUsuariosAdmin').value;
             if (!userParaBloquear || userParaBloquear.includes("Cargando")) return alert("Selecciona un usuario válido.");
@@ -175,6 +204,8 @@ Modulos.registrar({
         const verBloqueo = acciones.indexOf('bloquear_usuario') >= 0;
         const pb = document.querySelector('#panel-admin .panel-bitacora');
         const pl = document.querySelector('#panel-admin .panel-bloqueo');
+        const pd = document.querySelector('#panel-admin .panel-diagnostico');
+        if (pd) pd.style.display = acciones.indexOf('diagnostico') >= 0 ? '' : 'none';
         if (pb) pb.style.display = verBitacora ? '' : 'none';
         if (pl) pl.style.display = verBloqueo ? '' : 'none';
         if (verBloqueo) cargarUsuariosParaAdmin();
@@ -185,5 +216,7 @@ Modulos.registrar({
         document.getElementById('filtroBitacoraFecha').innerHTML = '<option value="">Cargando fechas...</option>';
         document.getElementById('filtroBitacoraUsuario').innerHTML = '<option value="">Cargando usuarios...</option>';
         document.getElementById('listaUsuariosAdmin').innerHTML = '<option>Cargando usuarios...</option>';
+        const salida = document.getElementById('resultado-diagnostico');
+        if (salida) { salida.textContent = ''; salida.style.display = 'none'; }
     }
 });
