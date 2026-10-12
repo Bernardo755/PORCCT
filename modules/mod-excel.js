@@ -73,19 +73,53 @@
             }
 
             const btn = document.getElementById('btnGenerarExcel');
-            btn.innerText = "⏳ Generando archivo...";
-            btn.disabled = true;
 
             try {
-                const respuesta = await enviarPeticion({
-                    action: "obtener_datos_excel",
-                    fecha: fechaSeleccionada
-                });
+                // Cada descarga exige la contraseña; el servidor la verifica.
+                let respuesta;
+                let mensajePass = '';
+                while (true) {
+                    const pass = await pedirPasswordModal(
+                        mensajePass,
+                        'Confirma tu contraseña para descargar',
+                        'Por seguridad, ingresa tu contraseña para descargar el reporte.'
+                    );
+                    if (pass === null) return; // canceló
+
+                    btn.innerText = "⏳ Generando archivo...";
+                    btn.disabled = true;
+
+                    respuesta = await enviarPeticion({
+                        action: "obtener_datos_excel",
+                        fecha: fechaSeleccionada,
+                        password: pass
+                    });
+
+                    if (respuesta && respuesta.errorPassword) { // contraseña incorrecta: reintentar
+                        mensajePass = respuesta.error;
+                        btn.innerText = "Generar y Descargar Reporte";
+                        btn.disabled = false;
+                        continue;
+                    }
+                    break;
+                }
+
+                if (respuesta.noAutorizado) {
+                    return; // enviarPeticion ya regresó al login
+                }
 
                 if (respuesta.error) {
                     alert("Error del servidor: " + respuesta.error);
                 } else if (respuesta.datos && respuesta.datos.length > 1) {
                     crearArchivoExcel(respuesta.datos, fechaSeleccionada);
+                    let aviso = "Reporte descargado.";
+                    if (respuesta.truncado) {
+                        aviso += `\n\nATENCIÓN: esa fecha tiene ${respuesta.totalFilas} registros y solo se incluyeron los primeros ${respuesta.maxFilas} (límite por descarga).`;
+                    }
+                    if (typeof respuesta.descargasRestantes === "number") {
+                        aviso += `\n\nDescargas restantes hoy: ${respuesta.descargasRestantes}.`;
+                    }
+                    alert(aviso);
                 } else {
                     alert("No se encontraron registros para esta fecha.");
                 }
