@@ -127,7 +127,7 @@
                 let html = `<div class="contenedor-tabla"><table>
                             <thead>
                                 <tr style="background:#004d40; color:white;">
-                                    <th>Fecha / Hora</th><th>Usuario</th><th>Acción Ejecutada</th><th>Dirección IP</th><th>Ubicación</th>
+                                    <th>Fecha / Hora</th><th>Usuario</th><th>Acción Ejecutada</th><th>Detalle</th><th>Dirección IP</th><th>Ubicación</th>
                                 </tr>
                             </thead>
                             <tbody>`;
@@ -137,6 +137,7 @@
                                 <td>${escaparHTML(l.fecha)}</td>
                                 <td><b>${escaparHTML(l.usuario)}</b></td>
                                 <td><span style="color:#b71c1c; font-weight:600;">${escaparHTML(l.accion)}</span></td>
+                                <td><small style="display:block; max-width:380px; overflow-wrap:anywhere; word-break:break-word;">${escaparHTML(l.detalle || '')}</small></td>
                                 <td><code>${escaparHTML(l.ip)}</code></td>
                                 <td><small style="color:#555;">${escaparHTML(l.ubicacion)}</small></td>
                              </tr>`;
