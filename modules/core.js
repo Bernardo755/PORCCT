@@ -73,14 +73,14 @@ const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000;
         }
 
         /* Modal de contraseña (campo oculto, no usa prompt()). Devuelve la contraseña o null. */
-        function pedirPasswordModal(mensajeError) {
+        function pedirPasswordModal(mensajeError, titulo, texto) {
             return new Promise(resolve => {
                 const overlay = document.createElement('div');
                 overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:99999;';
                 overlay.innerHTML = `
                     <div style="background:#fff;padding:20px;border-radius:10px;max-width:340px;width:90%;font-family:sans-serif;">
-                        <h3 style="margin-top:0;">Confirma tu contraseña</h3>
-                        <p style="font-size:14px;color:#555;">Por seguridad, después de varias consultas debes confirmar tu identidad para continuar.</p>
+                        <h3 id="confirmPassTitulo" style="margin-top:0;"></h3>
+                        <p id="confirmPassTexto" style="font-size:14px;color:#555;"></p>
                         <input type="password" id="confirmPassInput" placeholder="Contraseña" autocomplete="current-password" style="width:100%;padding:8px;box-sizing:border-box;">
                         <div id="confirmPassMsg" style="color:#c62828;font-weight:bold;min-height:18px;margin:8px 0;"></div>
                         <div style="display:flex;gap:8px;justify-content:flex-end;">
@@ -90,6 +90,8 @@ const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000;
                     </div>`;
                 document.body.appendChild(overlay);
                 const input = overlay.querySelector('#confirmPassInput');
+                overlay.querySelector('#confirmPassTitulo').innerText = titulo || 'Confirma tu contraseña';
+                overlay.querySelector('#confirmPassTexto').innerText = texto || 'Por seguridad, después de varias consultas debes confirmar tu identidad para continuar.';
                 overlay.querySelector('#confirmPassMsg').innerText = mensajeError || '';
                 const cerrar = valor => { overlay.remove(); resolve(valor); };
                 overlay.querySelector('#confirmPassOk').addEventListener('click', () => {
