@@ -118,13 +118,19 @@
             try {
                 const resultados = await enviarPeticion({ action: "buscar", columna: columna, valor: valor });
                 if (resultados && resultados.error) { contenedor.innerHTML = `<p style="color:red; font-weight:bold;">${escaparHTML(resultados.error)}</p>`; return; }
-                if (!Array.isArray(resultados) || resultados.length === 0) { contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; return; }
+                // Más de 25 coincidencias: el servidor responde { resultados, mensaje, ... }
+                let lista = resultados, aviso = '';
+                if (resultados && !Array.isArray(resultados) && Array.isArray(resultados.resultados)) {
+                    lista = resultados.resultados;
+                    aviso = resultados.mensaje || '';
+                }
+                if (!Array.isArray(lista) || lista.length === 0) { contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; return; }
 
                 let html = `<div class="contenedor-tabla"><table style="background:white;"><thead><tr>
                             <th>ACCIÓN</th><th>FOLIO</th><th>NOMBRE</th><th>CURP</th><th>SARE</th><th>MUNICIPIO</th><th>ESTATUS</th>
                             </tr></thead><tbody>`;
 
-                resultados.forEach((f, idx) => {
+                lista.forEach((f, idx) => {
                     html += `<tr>
                                 <td><button style="padding:5px 10px; background:#00796b;" onclick='seleccionarRegistroDoc(${JSON.stringify(f).replace(/'/g, "&#39;")})'>Seleccionar</button></td>
                                 <td><b>${escaparHTML(f.FOLIO || f.Folio || '')}</b></td>
@@ -136,7 +142,7 @@
                              </tr>`;
                 });
                 html += '</tbody></table></div>';
-                contenedor.innerHTML = html;
+                contenedor.innerHTML = (aviso ? `<p style="color:#e65100; font-weight:bold;">${escaparHTML(aviso)}</p>` : '') + html;
             } catch (error) { contenedor.innerHTML = '<p style="color:red; font-weight:bold;">Error de comunicación.</p>'; }
         }
 
