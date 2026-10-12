@@ -8,6 +8,7 @@ const API_URL = window.APP_CONFIG.API_URL;
 let usuarioActual = "";
 let rolActual = "";
 let sareUsuarioActual = "";
+let tokenActual = ""; // token de sesión emitido por el backend en el login
 let datosDispositivo = { ip: "Obteniendo...", ubicacion: "Obteniendo..." };
 
 let loteTemporal = [];
@@ -42,9 +43,10 @@ const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000;
             cerrarSesion();
         }
 
-        async function enviarPeticion(datos) {
+        async function enviarPeticion(datos, _esConfirmacion) {
             // El servidor debe autenticar y autorizar cada acción (esto es solo informativo).
             datos.usuario = usuarioActual;
+            datos.token = tokenActual;
             datos.ip = datosDispositivo.ip;
             datos.ubicacion = datosDispositivo.ubicacion;
             const respuesta = await fetch(API_URL, {
@@ -52,7 +54,64 @@ const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000;
                 body: JSON.stringify(datos),
                 headers: { 'Content-Type': 'text/plain;charset=utf-8' }
             });
-            return await respuesta.json();
+            const json = await respuesta.json();
+            // Token vencido, cuenta bloqueada o rol sin permiso: volver al login.
+            if (json && json.noAutorizado && usuarioActual) {
+                tokenActual = "";
+                usuarioActual = "";
+                loteTemporal = []; // sin sesión válida no se podría enviar; evita el diálogo de confirmación
+                alert("Tu sesión ya no es válida. Inicia sesión nuevamente.");
+                cerrarSesion();
+            }
+            // Cada N consultas el servidor exige confirmar la contraseña.
+            if (json && json.requiereConfirmacion && !_esConfirmacion) {
+                const confirmado = await confirmarContrasenaInteractivo();
+                if (!confirmado) return { exito: false, error: "Confirmación de contraseña cancelada." };
+                return await enviarPeticion(datos, true); // reintenta la petición original
+            }
+            return json;
+        }
+
+        /* Modal de contraseña (campo oculto, no usa prompt()). Devuelve la contraseña o null. */
+        function pedirPasswordModal(mensajeError) {
+            return new Promise(resolve => {
+                const overlay = document.createElement('div');
+                overlay.style.cssText = 'position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,.6);display:flex;align-items:center;justify-content:center;z-index:99999;';
+                overlay.innerHTML = `
+                    <div style="background:#fff;padding:20px;border-radius:10px;max-width:340px;width:90%;font-family:sans-serif;">
+                        <h3 style="margin-top:0;">Confirma tu contraseña</h3>
+                        <p style="font-size:14px;color:#555;">Por seguridad, después de varias consultas debes confirmar tu identidad para continuar.</p>
+                        <input type="password" id="confirmPassInput" placeholder="Contraseña" autocomplete="current-password" style="width:100%;padding:8px;box-sizing:border-box;">
+                        <div id="confirmPassMsg" style="color:#c62828;font-weight:bold;min-height:18px;margin:8px 0;"></div>
+                        <div style="display:flex;gap:8px;justify-content:flex-end;">
+                            <button type="button" id="confirmPassCancel" style="background:#757575;">Cancelar</button>
+                            <button type="button" id="confirmPassOk">Confirmar</button>
+                        </div>
+                    </div>`;
+                document.body.appendChild(overlay);
+                const input = overlay.querySelector('#confirmPassInput');
+                overlay.querySelector('#confirmPassMsg').innerText = mensajeError || '';
+                const cerrar = valor => { overlay.remove(); resolve(valor); };
+                overlay.querySelector('#confirmPassOk').addEventListener('click', () => {
+                    if (!input.value) { overlay.querySelector('#confirmPassMsg').innerText = 'Escribe tu contraseña.'; return; }
+                    cerrar(input.value);
+                });
+                overlay.querySelector('#confirmPassCancel').addEventListener('click', () => cerrar(null));
+                input.addEventListener('keydown', e => { if (e.key === 'Enter') overlay.querySelector('#confirmPassOk').click(); });
+                input.focus();
+            });
+        }
+
+        async function confirmarContrasenaInteractivo() {
+            let mensaje = '';
+            while (true) {
+                const pass = await pedirPasswordModal(mensaje);
+                if (pass === null) return false;
+                const r = await enviarPeticion({ action: "confirmar_password", password: pass }, true);
+                if (r && r.exito) return true;
+                if (r && r.noAutorizado) return false; // sesión cerrada por demasiados intentos
+                mensaje = (r && r.error) || 'No se pudo confirmar. Intenta de nuevo.';
+            }
         }
 
         function configurarVistasPorRol(rol) {
@@ -131,11 +190,13 @@ const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000;
                 if (res.exito) {
                     rolActual = res.rol;
                     sareUsuarioActual = res.sare || ""; // columna E de la hoja Usuarios
+                    tokenActual = res.token || "";
                     msj.innerText = "";
                     configurarVistasPorRol(rolActual);
                 } else {
                     msj.innerText = res.error;
                     usuarioActual = "";
+                    tokenActual = "";
                 }
             } catch (e) { msj.innerText = "Error en conexión con el servidor."; }
         }
@@ -150,12 +211,18 @@ const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000;
             try {
                 const resultados = await enviarPeticion({ action: "buscar", columna: columna, valor: valor });
                 if (resultados && resultados.error) { contenedor.innerHTML = `<p style="color:red; font-weight:bold;">${escaparHTML(resultados.error)}</p>`; return; }
-                if (!Array.isArray(resultados) || resultados.length === 0) { contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; return; }
+                // Más de 25 coincidencias: el servidor responde { resultados, mensaje, ... }
+                let lista = resultados, aviso = '';
+                if (resultados && !Array.isArray(resultados) && Array.isArray(resultados.resultados)) {
+                    lista = resultados.resultados;
+                    aviso = resultados.mensaje || '';
+                }
+                if (!Array.isArray(lista) || lista.length === 0) { contenedor.innerHTML = '<p style="color:orange; font-weight:bold;">Sin coincidencias.</p>'; return; }
 
                 let html = `<div class="contenedor-tabla"><table><thead><tr>
                             <th>FOLIO</th><th>NOMBRE</th><th>CURP</th><th>SARE</th><th>MUNICIPIO</th><th>CCT</th><th>ESCUELA</th><th>NIVEL</th><th>MES REMESA</th><th>OBSERVACIONES</th><th>ESTATUS</th>
                             </tr></thead><tbody>`;
-                resultados.forEach(f => {
+                lista.forEach(f => {
                     html += `<tr>
                                 <td><b>${escaparHTML(f.FOLIO || f.Folio || '')}</b></td>
                                 <td>${escaparHTML(f.NOMBRE_COMPLETO)}</td>
@@ -170,7 +237,8 @@ const TIEMPO_LIMITE_INACTIVIDAD = 15 * 60 * 1000;
                                 <td>${obtenerBadgeEstatus(f.ESTATUS)}</td>
                              </tr>`;
                 });
-                html += '</tbody></table></div>'; contenedor.innerHTML = html;
+                html += '</tbody></table></div>';
+                contenedor.innerHTML = (aviso ? `<p style="color:#e65100; font-weight:bold;">${escaparHTML(aviso)}</p>` : '') + html;
             } catch (error) { contenedor.innerHTML = '<p style="color:red; font-weight:bold;">Error de comunicación.</p>'; }
         }
 
@@ -221,6 +289,7 @@ async function cerrarSesion() {
     usuarioActual = "";
     rolActual = "";
     sareUsuarioActual = "";
+    tokenActual = "";
     loteTemporal = [];
     listaDocumentalAcumulada = [];
     registroSeleccionadoDoc = null;
